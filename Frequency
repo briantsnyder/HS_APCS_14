@@ -1,0 +1,160 @@
+**
+ * NOTE: This program used locally saved plain text documents
+ * 
+ * Class that determines the frequency of letters within a text
+ *
+ * Brian Snyder
+ * 2/8/18
+ */
+// imports necessary files 
+import java.util.ArrayList;
+public class Frequency {
+    // initializes variables used between methods
+    public int count; // used to determine # of times a letter appears
+    public int messageLength; // how long the message is 
+    public int numOfSpaces; // # of spaces within the message
+    public int otherCharacters; // # of other characters within the message
+    public double[] percentages; // array used for how frequent each letter appears
+    public static final ArrayList<Integer> Frequencies = new ArrayList<Integer>(); // # of times each letter appears (ArrayList of the int count)
+    public static final ArrayList<String> ALPHABET = new ArrayList<String>(); // the alphabet
+    
+    // constructor
+    public Frequency() {
+        
+    }
+    
+    // method that calculates the # of times each letter appears
+    public void calcFrequency(String message) {
+        // creates array the size of the length of the message
+        String[] letters = new String[message.length()];
+        messageLength = letters.length; // amount used later to determine percentages 
+        
+        // goes through message and saves each charatcer into an array
+        for (int i = 0; i < message.length(); i++) {
+            letters[i] = message.substring(i, i+1);
+        }
+        // goes through array to see if any spaces or other character occur, if so a counter incraments
+        // used to help get an accurate # for the percentages
+        for (int i = 0; i < letters.length; i++ ) {
+            if (letters[i].equals(" ")) {
+                numOfSpaces++;
+            } else if (letters[i].equals(",")) {
+                otherCharacters++;
+            } else if (letters[i].equals("\"")) {
+                otherCharacters++;
+            }
+        }
+        // goes through the alphabet and array to see if their characters match, if so, a counter incraments
+        for (int i = 0; i < ALPHABET.size(); i++) {
+            count = 0; // ressts counter for each iteration
+            for (int j = 0; j < letters.length; j++) {
+                if (letters[j].toLowerCase().indexOf(ALPHABET.get(i)) >= 0) {
+                    count++;
+                }
+            }
+            Frequencies.add(count); // adds counter vaue into arrayList (this is the # of times a letter appears within the message)
+        }
+    }
+    
+    // methd used to caluclate the percentages of each letter
+    public double[] calcPercentage() {
+        // initializes size of percentages array
+        percentages = new double[Frequencies.size()];
+        
+        // determines the # of characters that are not the alphabet
+        int miscCharacters = numOfSpaces + otherCharacters;
+        
+        // takes the amount each character showed up and divides it by total of alphabet characters
+        for (int i = 0; i < percentages.length; i++) {
+            percentages[i] = (Frequencies.get(i)/((double)(messageLength - miscCharacters)));
+        }
+        return percentages;
+    }
+    
+    // method that initializes the alphabet
+    public ArrayList setAlphabet() {
+        // finds the char value of "a" and adds each cahra from that point to "z" into an arrayList
+        String value = "a";
+        int charValue = value.charAt(0);
+        for (int i = 0; i < 26; i++) {
+            String next = String.valueOf((char)(charValue + i)); 
+            ALPHABET.add(next);
+        }
+        return ALPHABET;
+    }
+}
+
+/**
+ * Tester class that decodes a message by comparing frequencies of letters within the 
+ * coded text and regular text
+ *
+ * Brian Snyder
+ * 2/8/18
+ */
+// imports necessary files 
+import java.util.Scanner;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+public class FrequencyTester {
+    public static void main(String args[]) throws IOException {
+        // creates object for frequency class
+        Frequency a = new Frequency();
+        
+        // input scanner initialized
+        Scanner in = new Scanner(System.in);
+        
+        // asks user for file name
+        System.out.println("Please enter in the file name.");
+        System.out.println("Example: fileName");
+        String file = in.next();
+        
+        // assumes file is a .txt file and new scanner scans this file
+        File fileName = new File(file + ".txt");
+        Scanner inFile = new Scanner(fileName);
+        
+        String words = "";
+        
+        // while the file has more, the file is added to the blank string named "words"
+        while (inFile.hasNext() ) {
+            words = words + inFile.nextLine(); 
+        }
+        
+        // scanner is done scanning the file
+        inFile.close();
+        
+        // object creates alphabet, calculates the frequencies of all letters for the string named "words", and calculates the percentages 
+        a.setAlphabet();
+        a.calcFrequency(words);
+        a.calcPercentage();
+        
+        // displays the results in the window
+        System.out.printf("%26s%n", "Frequencies");
+        System.out.printf("%9s %16s %15s%n", "Letters", "Times Found", "Frequency");
+        System.out.println("--------------------------------------------");
+        
+        // prints the alphabet, # of times present for each letter, and frequenies for each letter
+        for (int i = 0; i < a.Frequencies.size(); i++) {
+            System.out.printf("%6s", a.ALPHABET.get(i));
+            System.out.printf("%15d", a.Frequencies.get(i));
+            System.out.printf("%20.4f%n", a.percentages[i]);
+        }
+        
+        // prints same results as above except this time to a new file with the same name of the origin file with "Freq" added to the end
+        PrintWriter outFile = new PrintWriter(new File(file + "Freq.txt"));
+        
+        outFile.printf("%26s%n", "Frequencies");
+        outFile.printf("%9s %16s %15s%n", "Letters", "Times Found", "Frequency");
+        outFile.println("--------------------------------------------");
+        
+        for (int i = 0; i < a.Frequencies.size(); i++) {
+            outFile.printf("%6s", a.ALPHABET.get(i));
+            outFile.printf("%15d", a.Frequencies.get(i));
+            outFile.printf("%20.4f%n", a.percentages[i]);
+        }
+        
+        // done printing to this file
+        outFile.close();
+    }
+}

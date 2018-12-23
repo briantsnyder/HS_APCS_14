@@ -1,0 +1,36 @@
+
+/**
+ * Design a code that calculates the distance of projectiles based on launch
+ * and launch velocities.
+ *
+ * Exact same code from the assignment that was involved calculating the
+ * distance of projectiles. However, this code involves using 'this'.
+ * 
+ * Brian Snyder
+ * 12/12/17
+ */
+public class LauncherV2 {
+    // declare private instant variables
+    private double degrees;
+    private int velocity;
+    LauncherV2(double degrees, int velocity) { // initialize prvate instant variables with constructor
+        this.degrees = degrees;
+        this.velocity = velocity;
+    }
+    // getter method for degrees
+    public double getDegrees() {
+        return this.degrees;
+    }
+    // getter method for velocities
+    public int getVelocities() {
+        return this.velocity;
+    }
+    // setter method that converts the degrees to radians
+    public void convertToRadians(double degrees) {
+        this.degrees = Math.toRadians(degrees);
+    }
+    // setter method that returns the distance of a projectile based off projectile equations
+    public double calcDistance(int velocity) {
+        return ((Math.pow(velocity,2) * Math.sin(2*this.degrees)) / 9.8);
+    }
+}

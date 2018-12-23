@@ -1,0 +1,222 @@
+
+/**
+ * Write a program to calculate the average category, pressure, and wind speed 
+ * of Atlantic hurricanes that have occurred between a given year range. Also, 
+ * tally the number of storms in each category according to the Saffir-Simpson 
+ * scale.
+ *
+ *This is the same program from the previous hurricane assignemtn, except that
+ * it will utilize 'this'
+ * 
+ * Brian Snyder
+ * 11/25/17
+ */
+public class HurricaneV3 {
+    // declaration of private instant variables
+    private String name, month;
+    private int year, pressure, category;
+    private double windSpeed;
+    // constructor for objects of type Hurricane
+    public HurricaneV3(int year, String month, int pressure, double windSpeed, String name, int category) {
+        this.year = year;
+        this.month = month;
+        this.pressure = pressure;
+        this.windSpeed = windSpeed;
+        this.name = name;
+        this.category = category;
+    }
+    // getter method for the hurricane year
+    public int getYear() {
+        return this.year;
+    }
+    // getter method for hurricane month
+    public String getMonth() {
+        return this.month;
+    }
+    // getter method for hurricane pressure
+    public int getPressure() {
+        return this.pressure;
+    }
+    // getter method for hurricane wind speed
+    public double getWindSpeed() {
+        return this.windSpeed;
+    }
+    // getter method for hurricane name
+    public String getName() {
+        return this.name;
+    }
+    // getter method for hurricane category
+    public int getCategory() {
+        return this.category;
+    }
+    // mutator method that changes the value of a hurricanes category
+    public void setCategory() {
+        // if the wind speed is within a certain range, the category changes to that range for 
+        // that hurricane
+        if (this.windSpeed <= 95) {
+            this.category = 1;
+        } else if (this.windSpeed > 95 && this.windSpeed <= 110) {
+            this.category = 2;
+        } else if (this.windSpeed > 110 && this.windSpeed <= 129) {
+            this.category = 3;
+        } else if (this.windSpeed > 129 && this.windSpeed <= 156) {
+            this.category = 4;
+        } else {
+            this.category = 5;
+        }
+    }
+    // toString method that prints the results
+    public String toString() {
+        return String.format("%5s %3s %-10s %5d %12d %20.2f %n", this.year, " ", this.name, this.category, this.pressure, this.windSpeed);
+    }
+}
+
+
+/**
+ * Write a program to calculate the average category, pressure, and wind speed 
+ * of Atlantic hurricanes that have occurred between a given year range. Also, 
+ * tally the number of storms in each category according to the Saffir-Simpson 
+ * scale.
+ *
+ * Exact same code from project, this tester class was only included
+ * to show the output of the code when using 'this'
+ * 
+ * Brian Snyder
+ * 11/25/17
+ */
+// imports necessary files
+import java.util.Scanner;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+public class HurricaneV3Tester {
+    public static void main(String[] args) throws IOException {
+        // Scans information from initialized file
+        File fileName = new File("hurricanedata.txt");
+        Scanner inFile = new Scanner(fileName);
+        
+        // initializes variables
+        int count = 0;
+        int totalPressure = 0;
+        int totalCategory = 0;
+        int minPressure = Integer.MAX_VALUE;
+        int maxPressure = Integer.MIN_VALUE;
+        int minCategory = Integer.MAX_VALUE;
+        int maxCategory = Integer.MIN_VALUE;
+        
+        double avgCategory = 0;
+        double totalWindSpeed = 0;
+        double avgWindSpeed = 0;
+        double avgPressure = 0;
+        double minWindSpeed = Integer.MAX_VALUE;
+        double maxWindSpeed = Integer.MIN_VALUE;
+        
+        // initializes arrays
+        String [] month = new String [156];
+        String name [] = new String [156];
+        Double [] windSpeed = new Double [156];
+        Integer [] year = new Integer [156];
+        Integer [] pressure = new Integer [156];
+        
+        // initializes array list
+        ArrayList<HurricaneV3> hurricanes = new ArrayList<HurricaneV3>();
+
+        // while file has another line, each piece of data saved to arrays 
+        while (inFile.hasNextLine() ){
+            year[count] = inFile.nextInt();
+            month[count] = inFile.next();
+            pressure[count] = inFile.nextInt();
+            windSpeed[count] = (inFile.nextDouble() * 1.15078);
+            name[count] = inFile.next();
+            count++; // incraments in order to determine # of hurricanes in file
+        }
+        
+        inFile.close(); // stops reading the file
+        
+        // asks user for beginning year
+        Scanner in = new Scanner(System.in);
+        System.out.print("Choose a begin year (1995 - 2015): ");
+        int beginYear = in.nextInt();
+        
+        // if invalid option entered, system asks user again
+        while (beginYear < 1995 || beginYear > 2015) {
+            System.out.print("Invalid year, enter a year after 1994 or before 2016 ");
+            beginYear = in.nextInt();
+        }
+        
+        // asks user for end year
+        System.out.print("Choose an end year (2015 is the latest): ");
+        int endYear = in.nextInt();
+        
+        // if invalid option entered, system asks user again
+        while (endYear > 2015 && endYear > beginYear) {
+            System.out.print("Invalid year, enter a year after 1994 or after the begin year ");
+            endYear = in.nextInt();
+        }
+        
+        // creates a hurricane object based off the arrays initialized while reading file
+        for (int i = 0; i < count; i++ ) {
+            hurricanes.add(new HurricaneV3(year[i], month[i], pressure[i], windSpeed[i], name[i], 0));
+        }
+        
+        // for each hurricane, if the hurricane's year is not within the 
+        // years the user entered, that hurricane is removed from the array
+        for (int index = 0; index < hurricanes.size(); index++) {
+            if (hurricanes.get(index).getYear() < beginYear || hurricanes.get(index).getYear() > endYear) {
+                hurricanes.remove(index);
+                index--; // index decrements to adjust for removed hurricane
+            }
+        }
+    
+        // displays header
+        System.out.println("");
+        System.out.printf("%42s\n", "Hurricanes " + beginYear + " - " + endYear);
+        System.out.println("");
+        System.out.printf("%5s%14s%10s%18s%21s\n", "Year", "Hurricane", "Category", "Pressure (mb)", "Wind Speed (mph)");
+        System.out.println("===================================================================");
+        
+        // determines categories, averages, and maxs / mins
+        for (int i = 0; i < hurricanes.size(); i++) {
+            hurricanes.get(i).setCategory(); // runs method that calculates category of a hurricane
+            
+            // accumulates the category, pressure, and wind speed to find the respective averages
+            totalCategory += hurricanes.get(i).getCategory();
+            totalPressure += hurricanes.get(i).getPressure();
+            totalWindSpeed += hurricanes.get(i).getWindSpeed();
+            
+            // determines max / min 
+            if (hurricanes.get(i).getPressure() > maxPressure) {
+                maxPressure = hurricanes.get(i).getPressure();
+            }
+            if (hurricanes.get(i).getPressure() < minPressure) {
+                minPressure = hurricanes.get(i).getPressure();
+            }
+            if (hurricanes.get(i).getWindSpeed() > maxWindSpeed) {
+                maxWindSpeed = hurricanes.get(i).getWindSpeed();
+            }
+            if (hurricanes.get(i).getWindSpeed() < minWindSpeed) {
+                minWindSpeed = hurricanes.get(i).getWindSpeed();
+            }
+            if (hurricanes.get(i).getCategory() > maxCategory) {
+                maxCategory = hurricanes.get(i).getCategory();
+            }
+            if (hurricanes.get(i).getCategory() < minCategory) {
+                minCategory = hurricanes.get(i).getCategory();
+            }
+            // uses to String method to print each hurricane
+            System.out.print(hurricanes.get(i));
+        }
+        
+        // calculates averages by taking total divided by size of array list
+        avgPressure = ((double)totalPressure / hurricanes.size());
+        avgWindSpeed = (totalWindSpeed / hurricanes.size());
+        avgCategory = ((double)totalCategory / hurricanes.size());
+        
+        // displays results
+        System.out.println("===================================================================");
+        
+        System.out.printf("%15s %12.1f %12.1f %18.2f %n", "Average:", avgCategory, avgPressure, avgWindSpeed);
+        System.out.printf("%15s %10d %12d %20.2f %n", "Minimum:", minCategory, minPressure, minWindSpeed);
+        System.out.printf("%15s %10d %12d %20.2f %n", "Maximum:", maxCategory, maxPressure, maxWindSpeed);      
+    }
+}

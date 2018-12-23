@@ -1,0 +1,283 @@
+/**
+ * Develope a class that encrypts a user message
+ * using the Caesar Shift
+ *
+ * Brian Snyder
+ * 1/28/18
+ */
+// imports necessary files
+import java.util.ArrayList;
+public class Encryption {
+    // intializes static variables including an arrayList for both alphabets
+    public static int key; // initializes shift key as a class variable 
+    public static final ArrayList<String> ALPHABET = new ArrayList<String>(); // the regular alphabet remains constant and unchanged
+    public static ArrayList<String> cipher = new ArrayList<String>();
+    
+    // constructor to define the key variable 
+    public void setKey(int input) {
+        key = input;
+    }
+    
+    // getter method that creates the regular alphabet
+    // figured this was quicker and can be more easily modified than simply defining an array by writing out all 26 characters
+    public ArrayList getAlphabet() {
+        String value = "a";
+        int charValue = value.charAt(0); // takes char value of 'a' as a startinf point
+        for (int i = 0; i < 26; i++) {
+            String next = String.valueOf((char)(charValue + i)); // adds next char by incramenting char value by one
+            ALPHABET.add(next);
+        }
+        return ALPHABET; // returns the arrayLsit of the regular alphabet
+    }
+    
+    // setter method that defines the cipher alphabet by using the arrayList for the alphabet and the user entered shift key
+    public static ArrayList setAlphabet() {
+        for (int i = 0; i <ALPHABET.size(); i++) {
+            int letter = ALPHABET.get(i).charAt(0); // converts strings into chars
+            int newLetter = key + letter; // adds char value to shift key
+            if (newLetter > 122) {
+                cipher.add(String.valueOf((char)(newLetter-26))); // if the sum is greater than 122 (the char value for z), subtract 26 from char value
+            }
+            else {
+                cipher.add(String.valueOf((char)(newLetter))); // otherwise add new char value
+             }
+        }
+        return cipher; // return arrayList of this new alphabet
+    }
+    
+    // method that encrypts the user entered messages
+    public static String encrypt(String message) {
+        String newMessage = ""; // intializes blank string that will change to have the encrypted message of the original message
+        String[] letters = new String[message.length()]; // creates an array for all the characters within the message
+        
+        for (int i = 0; i < message.length(); i++) {
+            letters[i] = message.substring(i, i+1); // turns each value of the array into its separate substring
+        }
+        
+        for (int i = 0; i < letters.length; i++) {
+            if (letters[i].equals(" ")) {
+                newMessage += " "; // if the value of the substring is a space, add a space to the encrypted message
+            }
+            for (int j = 0; j < ALPHABET.size(); j++) { 
+                if (letters[i].indexOf(ALPHABET.get(j)) >= 0) { // if the value of a substring matches a letter within the regular alphabet
+                    newMessage += cipher.get(j);                // the cipher letter of that same index is added to the encrypted message
+                }
+            }
+        }
+        return newMessage; // returns encrypted message
+    }
+}
+
+/**
+ * Develope a class that decrypts a user message
+ * using the Caesar Shift
+ *
+ * Brian Snyder
+ * 1/31/18
+ */
+// This class is very similar to the encryption class except for slight changes within the encrypt / decrypt methods
+
+// imports necessary files
+import java.util.ArrayList;
+public class Decryption {
+    // intializes static variables including an arrayList for both alphabets
+    public static int key; // initializes shift key as a class variable
+    public static final ArrayList<String> ALPHABET = new ArrayList<String>(); // the regular alphabet remains constant and unchanged
+    public static ArrayList<String> cipher = new ArrayList<String>();
+    
+    // constructor to define the key variable 
+    public void setKey(int input) {
+        key = input;
+    }
+    
+    // getter method that creates the regular alphabet
+    // figured this was quicker and can be more easily modified than simply defining an array by writing out all 26 characters
+    public ArrayList getAlphabet() {
+        String value = "a";
+        int charValue = value.charAt(0); // takes char value of 'a' as a startinf point
+        for (int i = 0; i < 26; i++) {
+            String next = String.valueOf((char)(charValue + i)); // adds next char by incramenting char value by one
+            ALPHABET.add(next);
+        }
+        return ALPHABET; // returns the arrayLsit of the regular alphabet
+    }
+    
+    // setter method that defines the cipher alphabet by using the arrayList for the alphabet and the user entered shift key
+    public static ArrayList setAlphabet() {
+        for (int i = 0; i <ALPHABET.size(); i++) {
+            int letter = ALPHABET.get(i).charAt(0); // converts strings into chars
+            int newLetter = key + letter; // adds char value to shift key
+            if (newLetter > 122) {
+                cipher.add(String.valueOf((char)(newLetter-26))); // if the sum is greater than 122 (the char value for z), subtract 26 from char value
+            }
+            else {
+                cipher.add(String.valueOf((char)(newLetter))); // otherwise add new char value
+             }
+        }
+        return cipher; // return arrayList of this new alphabet
+    }
+    
+    // method that decrypts the user entered messages
+    public static String decrypt(String message) {
+        String newMessage = ""; // intializes blank string that will change to have the decrypted message of the original message
+        String[] letters = new String[message.length()]; // creates an array for all the characters within the message
+        
+        for (int i = 0; i < message.length(); i++) {
+            letters[i] = message.substring(i, i+1); // turns each value of the array into its separate substring
+        }
+        
+        for (int i = 0; i < letters.length; i++) {
+            if (letters[i].equals(" ")) {
+                newMessage += " "; // if the value of the substring is a space, add a space to the decrypted message
+            }
+            for (int j = 0; j < ALPHABET.size(); j++) {
+                if (letters[i].indexOf(cipher.get(j)) >= 0) { // if the value of a substring matches a letter within the cipher alphabet
+                    newMessage += ALPHABET.get(j);            // the regualr alphabet letter of that same index is added to the decrypted message
+                }
+            }
+        }
+        return newMessage; // returns decrypted message
+    }
+}
+
+/**
+ * Tester class for Encryption / Decryption of
+ * the Caesar Shift
+ *
+ * Brian Snyder
+ * 1/28/18
+ */
+// imports necessary files 
+import java.util.Scanner;
+import java.util.ArrayList;
+public class CaesarTester {
+    public static void main(String args[] ) {
+        // initializes objects for both encrypt and decrypt class
+        Encryption a = new Encryption();
+        Decryption b = new Decryption();
+        
+        // initializes arrayList that will store all of the user entered messages
+        ArrayList<String> messages = new ArrayList<String>();
+        
+        // initializes scanner
+        Scanner in = new Scanner(System.in);
+        
+        // Displays Menu
+        System.out.println("Caesar Shift Coder");
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        System.out.println(" [1] Encryption");
+        System.out.println(" [2] Decrption");
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        
+        // Asks the user which option they want
+        System.out.println("Enter in the number of your desired choice");
+        String choice = in.next();
+        
+        // If the option is invalid, the user is asked to put in a valid option
+        while ((!choice.equals("1")) && (!choice.equals("2"))) {
+            System.out.println("Invalid option, please choose a valid option from the menu");
+            choice = in.next();
+        }
+        
+        // Below is the code if the user wanted to decrypt instead
+        // It is extremely similar to the encrypt code, except that it utilizes a different class
+        
+        // if the user chose option one
+        if (choice.equals("1")) {
+            
+            // asks user for the shift key
+            System.out.println("Choose a shift key (enter in integer from 0-25)");
+            String key = in.next();
+            
+            // if entered value is not valid, the user is asked to enter in another value
+            while ((Integer.parseInt(key) > 25) || (Integer.parseInt(key) < 0)) {
+                System.out.println("Invalid option, enter in an integer from 0-25");
+                key = in.next();
+            }
+        
+            // encrypting object creates the cipher alphabet based off the user entered key
+            a.setKey(Integer.parseInt(key));
+        
+            // Asks user to enter in as many messages as they want
+            System.out.println("Enter in a message, press \'Q\' to encrypt");
+            String message = in.nextLine();
+            
+            // if the first message is not 'q' to quit, the message is added to the arrayList
+            // There needed to be this if statement instead of only the while below because it would miss the first user message
+            if (!message.equalsIgnoreCase("q")) {
+                messages.add(message);
+            }
+            
+            // If the user continues entering in messages that are not 'q' to quit, these messages are added to the arrayList
+            while (!message.equalsIgnoreCase("q")) {
+                message = in.nextLine();
+                messages.add(message);
+            }
+            
+            // Removes 'q' from the arrayList since that is the last message added to the list, which the user likely did not want to encrypt
+            messages.remove(messages.size()-1);
+        
+            // Prints the regualr and cipher alphabet
+            System.out.println("Alphabet: " + a.getAlphabet());
+            System.out.println("Cipher Alphabet: " + a.setAlphabet());
+            
+            // Displays results
+            System.out.println("");
+            System.out.println("Messages: ");
+            System.out.println("-------------------------");
+            
+            // Prints the encryped message for all of the messages in the arrayList
+            for (int i = 1; i < messages.size(); i++) {
+                System.out.println(i + ": " + a.encrypt(messages.get(i)));
+            }
+            
+            // if the user chose option 2, to decrypt
+        } else if (choice.equals("2")) {
+            
+            // asks user for shift key
+            System.out.println("Choose a shift key (enter in integer from 0-25)");
+            String key = in.next();
+            
+            // if value of shift key is invalid, the user is asked to enter in another value
+            while ((Integer.parseInt(key) > 25) || (Integer.parseInt(key) < 0)) {
+                System.out.println("Invalid option, enter in an integer from 0-25");
+                key = in.next();
+            }
+            
+            // decrypting object creates the cipher alphabet based off the user entered key
+            b.setKey(Integer.parseInt(key));
+            
+            // asks user to enter in as many messages as he/she wants
+            System.out.println("Enter in a message, press \'Q\' to encrypt");
+            String message = in.nextLine();
+            
+            // if 'q' is not pressed to quit, the first message is added to the arrayList
+            if (!message.equalsIgnoreCase("q")) {
+                messages.add(message);
+            }
+            
+            // If the user continues entering in messages that are not 'q' to quit, these messages are added to the arrayList
+            while (!message.equalsIgnoreCase("q")) {
+                message = in.nextLine();
+                messages.add(message);
+            }
+            
+            // Removes 'q' from the arrayList since that is the last message added to the list, which the user likely did not want to decrypt
+            messages.remove(messages.size()-1);
+            
+            // Prints the regular and cipher alphabet
+            System.out.println("Alphabet: " + b.getAlphabet());
+            System.out.println("Cipher Alphabet: " + b.setAlphabet());
+            
+            // Displays results
+            System.out.println("");
+            System.out.println("Messages: ");
+            System.out.println("-------------------------");
+            
+            // Prints the decrypted messages for all the messages within the arrayList
+            for (int i = 1; i < messages.size(); i++) {
+                System.out.println(i + ": " + b.decrypt(messages.get(i)));
+            }  
+        }
+    }
+}

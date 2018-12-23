@@ -1,0 +1,126 @@
+class ThisDemoA
+{
+    private String name;    //this name is an instance variable
+
+    ThisDemoA()
+    {
+    }
+
+    ThisDemoA(String name) //that name is a local variable
+    {
+        name = name;
+    }
+
+    public void setName(String name) //that name is a local variable
+    {
+      name = name;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+}
+
+
+public class ThisDemoATester
+{
+    public static void main(String[] args)
+    {
+        System.out.println("Test the constructor: ");
+        
+        ThisDemoA try1 = new ThisDemoA("Whitfield Diffie");
+        System.out.println(try1.getName() + " is a famous cryptographer.");
+
+
+        System.out.println("\nTry again with setName method: ");
+
+        ThisDemoA try2 = new ThisDemoA();
+        try2.setName("Whitfield Diffie");
+        System.out.println(try2.getName() + " is a famous cryptographer.");
+    }
+}
+
+class ThisDemoB
+{
+    private String myName;    //this name is an instance variable
+
+    ThisDemoB()
+    {
+    }
+
+    ThisDemoB(String name)   //that name is a local variable
+    {
+        myName = name;
+    }
+
+    public void setName(String name)  //that name is a local variable
+    {
+        myName = name;
+    }
+
+    public String getName()
+    {
+        return myName;
+    }
+}
+
+public class ThisDemoBTester
+{
+    public static void main(String[] args)
+    {
+        System.out.println("Test the constructor: ");
+
+        ThisDemoB try3 = new ThisDemoB("Whitfield Diffie");
+        System.out.println(try3.getName() + " is a famous cryptographer.");
+
+
+        System.out.println("\nTry again with setName method: ");
+
+        ThisDemoB try4 = new ThisDemoB();
+        try4.setName("Whitfield Diffie");
+        System.out.println(try4.getName() + " is a famous cryptographer.");
+    }
+}
+
+class ThisDemoC
+{
+    private String name;    //this name is an instance variable
+
+    ThisDemoC()
+    {
+    }
+
+    ThisDemoC(String name) //that name is a local variable
+    {
+        this.name = name;
+    }
+
+    public void setName(String name)  //that name is a local variable
+    {
+        this.name = name;
+    }
+
+    public String getName()
+    {
+        return this.name;
+    }
+}
+
+public class ThisDemoCTester
+{
+    public static void main(String[] args)
+    {
+        System.out.println("Test the constructor: ");
+
+        ThisDemoC try5 = new ThisDemoC("Whitfield Diffie");
+        System.out.println(try5.getName() + " is a famous cryptographer.");
+
+
+        System.out.println("\nTry again with setName method: ");
+
+        ThisDemoC try6 = new ThisDemoC();
+        try6.setName("Whitfield Diffie");
+        System.out.println(try6.getName() + " is a famous cryptographer.");
+    }
+}

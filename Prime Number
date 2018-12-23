@@ -1,0 +1,69 @@
+/**
+ * Write a program that calculates the prime numbers within the user entered
+ * range
+ *
+ * Brian Snyder
+ * 2/4/18
+ */
+public class PrimeNumber {
+    // initializes private instance variables
+    private int min, max;
+    
+    public PrimeNumber(int min, int max) {
+        // declares instant variables by using 'this'
+        this.min = min;
+        this.max = max;
+    }
+    
+    // method that calculates prime numbers within a range
+    public void calcNum() {
+        int count = 0;
+        // for all the values within the range
+        for (int i = this.min; i <= this.max; i++) {
+            // resets counter
+            count = 0;
+            // for all the values between 1 and the max
+            for (int j = 1; j < this.max; j++) {
+                // if the values are divisible, the conter increases
+                if (i % j == 0) {
+                    count++;
+                }
+            }
+            // if the number was only divisible by one and itself (counter = 2), the number is prime
+            if (count == 2) {
+                System.out.println("Prime: " + i);
+            }
+        }   
+    }
+}
+
+
+/**
+ * Write a program that calculates the prime numbers within the user entered
+ * range
+ *
+ * Brian Snyder
+ * 2/4/18
+ */
+// imports scanner
+import java.util.Scanner;
+public class PrimeNumberTester {
+    public static void main(String args[] ) {
+        // initializes scanner
+        Scanner in = new Scanner(System.in);
+        
+        // asks user for a maximum value
+        System.out.println("Enter in a minimum value");
+        int min = in.nextInt();
+        
+        // asks user for a minimum value
+        System.out.println("Enter in a maximum value");
+        int max = in.nextInt();
+        
+        // creates an object using the min and max values
+        PrimeNumber test = new PrimeNumber(min, max);
+        
+        // calculates and prints prime numbers
+        test.calcNum();
+    }
+}
